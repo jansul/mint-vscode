@@ -1,3 +1,4 @@
+import { MintContext } from "./context";
 import { runMintCommandAsTask, promiseSeconds } from "./utils";
 import * as vscode from "vscode";
 
@@ -63,4 +64,11 @@ export function mintTestCommand() {
 
 export function mintVersionCommand() {
   runMintCommandAsTask("version", "Show current version");
+}
+
+export function mintRestartLanguageServerCommand(context: MintContext) {
+  return async () => {
+    await context.restart();
+    vscode.window.showInformationMessage("Restarted Mint language server");
+  };
 }

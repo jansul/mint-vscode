@@ -3,28 +3,26 @@
   "license": "MIT",
   "displayName": "Mint",
   "description": "VS Code Support for Mint a refreshing programming language for the front-end web development",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "publisher": "mint-lang",
   "repository": {
     "url": "https://github.com/mint-lang/mint-vscode"
   },
   "engines": {
-    "vscode": "^1.49.0"
+    "vscode": "^1.75.0"
   },
   "activationEvents": [
-    "onLanguage:mint",
-    "workspaceContains:**/*.mint",
-    "onCommand:mint.init"
+    "workspaceContains:**/*.mint"
   ],
   "main": "./out/src/extension",
   "dependencies": {
-    "vscode-languageclient": "^6.1.3"
+    "vscode-languageclient": "^8.1.0"
   },
   "devDependencies": {
-    "@types/node": "^14.11.2",
-    "@types/vscode": "^1.49.0",
+    "@types/node": "^16.18.34",
+    "@types/vscode": "^1.75.1",
     "js-yaml": "^3.14.0",
-    "typescript": "^4.0.3"
+    "typescript": "^5.1.3"
   },
   "scripts": {
     "compile": "echo Compiling... && npm run convert && tsc -p ./",
@@ -40,12 +38,28 @@
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "Mint Language Server",
+      "title": "Mint",
       "properties": {
         "mint.languageServer.location": {
           "type": "string",
-          "description": "Provide a custom location for the language server binary"
+          "description": "Provide a custom location for the language server binary.",
+          "default": "/usr/local/bin/mint"
+        },
+        "mint.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the Mint language server."
         }
+      }
+    },
+    "configurationDefaults": {
+      "[mint]": {
+        "editor.semanticHighlighting.enabled": true
       }
     },
     "languages": [
@@ -124,6 +138,11 @@
         "command": "mint.version",
         "title": "Show current version",
         "category": "Mint"
+      },
+      {
+        "command": "mint.ls.restart",
+        "title": "Restarts the Mint language server",
+        "category": "Mint"
       }
     ],
     "menus": {
@@ -165,6 +184,10 @@
         },
         {
           "command": "mint.version",
+          "when": "mint:isActivated"
+        },
+        {
+          "command": "mint.ls.restart",
           "when": "mint:isActivated"
         }
       ]
